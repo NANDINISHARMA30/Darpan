@@ -46,13 +46,13 @@ export default function Sidebar() {
             <button
               onClick={() => setPanel('evidence')}
               className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all ${
-                activePanel === 'evidence'
+                activePanel === 'Trends'
                   ? 'text-white bg-gradient-to-r from-indigo-600 to-violet-600 shadow-lg shadow-indigo-500/30'
                   : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50'
               }`}
             >
               <FileText className="w-5 h-5" />
-              Evidence
+              Trends
             </button>
             <button
               onClick={() => setPanel('statistics')}

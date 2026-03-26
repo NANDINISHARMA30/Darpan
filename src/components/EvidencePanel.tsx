@@ -213,7 +213,7 @@ export default function EvidencePanel() {
     <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl shadow-xl shadow-gray-900/5 p-6 sm:p-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Evidence</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Trends</h2>
           <div className="flex items-center gap-2">
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-3 py-1">
               <span className="relative flex h-2.5 w-2.5">

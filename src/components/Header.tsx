@@ -34,7 +34,7 @@ export default function Header() {
               Knowledge Graph
             </button>
             <button className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-lg transition-colors">
-              Evidence
+              Trends
             </button>
           </nav>
 
