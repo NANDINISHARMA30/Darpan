@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ExternalLink, FileText, ShieldCheck } from 'lucide-react';
+import { ExternalLink, FileText, ShieldCheck, Bookmark, BookmarkCheck } from 'lucide-react';
+import { useLibrary } from '../contexts/LibraryContext';
 
 interface EvidenceItem {
   id: string;
@@ -161,6 +162,7 @@ const getRelativeTime = (createdAt: number, now: number) => {
 };
 
 export default function EvidencePanel() {
+  const { addBookmark, removeBookmark, isBookmarked } = useLibrary();
   const [now, setNow] = useState(Date.now());
   const [, setPoolIndex] = useState(INITIAL_VISIBLE_ITEMS);
   const [evidenceItems, setEvidenceItems] = useState<EvidenceItem[]>(() => {
@@ -253,15 +255,38 @@ export default function EvidencePanel() {
                     {item.source} ({item.year})
                   </p>
                 </div>
-                <a
-                  href={item.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-7 h-7 rounded-lg inline-flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
-                  aria-label={`Open source: ${item.source}`}
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+                <div className="flex flex-col gap-2">
+                  <a
+                    href={item.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg inline-flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                    aria-label={`Open source: ${item.source}`}
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                  <button 
+                    onClick={() => {
+                      if (isBookmarked(item.id)) {
+                        removeBookmark(item.id);
+                      } else {
+                        addBookmark({
+                          id: item.id,
+                          type: 'evidence',
+                          title: item.title,
+                          data: item
+                        });
+                      }
+                    }}
+                    className="w-7 h-7 rounded-lg inline-flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                  >
+                    {isBookmarked(item.id) ? (
+                      <BookmarkCheck className="w-4 h-4 text-indigo-600" />
+                    ) : (
+                      <Bookmark className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
               </div>
               <div className="flex items-center gap-2 text-xs text-gray-500 mt-3">
                 <span>Confidence {item.confidence}</span>

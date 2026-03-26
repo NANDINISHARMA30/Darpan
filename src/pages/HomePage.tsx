@@ -4,6 +4,7 @@ import SearchSection from '../components/SearchSection';
 import IntelligenceGrid from '../components/IntelligenceGrid';
 import KnowledgeGraph from '../components/KnowledgeGraph';
 import EvidencePanel from '../components/EvidencePanel';
+import LibraryPanel from '../components/LibraryPanel';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Focus } from 'lucide-react';
@@ -78,6 +79,11 @@ export default function HomePage() {
             {activePanel === 'evidence' && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <EvidencePanel />
+              </div>
+            )}
+            {activePanel === 'library' && (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <LibraryPanel />
               </div>
             )}
             {activePanel === 'intelligence' && (

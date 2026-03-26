@@ -1,6 +1,8 @@
-import { Download, Database, Menu, X, BarChart3, Network, FileText, Brain, Focus } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { Download, Database, Menu, X, BarChart3, Network, FileText, Brain, Focus, LogIn, LogOut, Library, BookmarkCheck } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useLibrary } from '../contexts/LibraryContext';
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -21,8 +23,12 @@ export default function Header({
 }: HeaderProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const activePanel = searchParams.get('panel') ?? 'intelligence';
+  const { isAuthenticated, logout } = useAuth();
+  const { addBookmark, isBookmarked, removeBookmark } = useLibrary();
+  const navigate = useNavigate();
 
   const setPanel = (panel: string) => {
+    if (!isAuthenticated) return;
     if (panel === 'intelligence') {
       setSearchParams({});
       return;
@@ -35,18 +41,22 @@ export default function Header({
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           <div className="flex items-center gap-2 sm:gap-3">
-            <button 
-              onClick={onMenuToggle}
-              className="lg:hidden p-2 -ml-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
-            >
-              {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            {isAuthenticated && (
+              <button 
+                onClick={onMenuToggle}
+                className="lg:hidden p-2 -ml-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+              >
+                {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            )}
             <div 
               onClick={() => {
-                setPanel('intelligence');
-                if (setFocusMode) setFocusMode(false);
+                if (isAuthenticated) {
+                  setPanel('intelligence');
+                  if (setFocusMode) setFocusMode(false);
+                }
               }}
-              className="flex items-center gap-2 sm:gap-3 cursor-pointer"
+              className={`flex items-center gap-2 sm:gap-3 ${isAuthenticated ? 'cursor-pointer' : ''}`}
             >
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-lg flex items-center justify-center transform rotate-45 transition-transform hover:scale-110">
                 <div className="transform -rotate-45">
@@ -60,31 +70,34 @@ export default function Header({
                 <p className="text-[10px] sm:text-xs text-gray-500 hidden xs:block">Global Intelligence Engine</p>
               </div>
             </div>
-            <div className="ml-2 hidden md:flex items-center gap-2 px-3 py-1 bg-green-50 border border-green-200 rounded-full">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-              </span>
-              <span className="text-xs font-medium text-green-700">Live</span>
-            </div>
+            {isAuthenticated && (
+              <div className="ml-2 hidden md:flex items-center gap-2 px-3 py-1 bg-green-50 border border-green-200 rounded-full">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                <span className="text-xs font-medium text-green-700">Live</span>
+              </div>
+            )}
           </div>
 
-          <nav className="hidden lg:flex items-center gap-1 bg-gray-50/50 p-1 rounded-xl border border-gray-100">
-            {activePanel === 'intelligence' && setFocusMode && (
-              <div className="relative group/focus">
-                <button 
-                  onClick={() => setFocusMode(prev => !prev)}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
-                    focusMode 
-                      ? 'text-white bg-gradient-to-r from-indigo-600 to-violet-600 shadow-md shadow-indigo-500/30' 
-                      : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
-                  }`}
-                >
-                  <Focus className="w-4 h-4" />
-                  Focus Mode
-                </button>
+          {isAuthenticated && (
+            <nav className="hidden lg:flex items-center gap-1 bg-gray-50/50 p-1 rounded-xl border border-gray-100">
+              {activePanel === 'intelligence' && setFocusMode && (
+                <div className="relative group/focus">
+                  <button 
+                    onClick={() => setFocusMode(prev => !prev)}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
+                      focusMode 
+                        ? 'text-white bg-gradient-to-r from-indigo-600 to-violet-600 shadow-md shadow-indigo-500/30' 
+                        : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
+                    }`}
+                  >
+                    <Focus className="w-4 h-4" />
+                    Focus Mode
+                  </button>
 
-                {focusMode && setFocusTarget && (
+                  {focusMode && setFocusTarget && (
                     <div className="absolute top-full left-0 pt-2 w-56 opacity-0 group-hover/focus:opacity-100 pointer-events-none group-hover/focus:pointer-events-auto transition-all z-50 transform origin-top scale-95 group-hover/focus:scale-100">
                       <div className="bg-white border border-gray-200 rounded-xl shadow-2xl py-2">
                         <div className="px-3 py-1 mb-1 border-b border-gray-100">
@@ -129,70 +142,117 @@ export default function Header({
                       </div>
                     </div>
                   )}
-              </div>
-            )}
-            <button 
-              onClick={() => setPanel('intelligence')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
-                activePanel === 'intelligence' && !focusMode
-                  ? 'text-indigo-600 bg-white shadow-sm border border-indigo-100' 
-                  : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
-              }`}
-            >
-              <Brain className="w-4 h-4" />
-              Intelligence
-            </button>
-            <button 
-              onClick={() => setPanel('knowledge-graph')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
-                activePanel === 'knowledge-graph' 
-                  ? 'text-indigo-600 bg-white shadow-sm border border-indigo-100' 
-                  : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
-              }`}
-            >
-              <Network className="w-4 h-4" />
-              Knowledge Graph
-            </button>
-            <button 
-              onClick={() => setPanel('evidence')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
-                activePanel === 'evidence' 
-                  ? 'text-indigo-600 bg-white shadow-sm border border-indigo-100' 
-                  : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
-              }`}
-            >
-              <FileText className="w-4 h-4" />
-              Trends
-            </button>
-            <button 
-              onClick={() => setPanel('statistics')}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
-                activePanel === 'statistics' 
-                  ? 'text-indigo-600 bg-white shadow-sm border border-indigo-100' 
-                  : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
-              }`}
-            >
-              <BarChart3 className="w-4 h-4" />
-              Statistics
-            </button>
-          </nav>
+                </div>
+              )}
+              <button 
+                onClick={() => setPanel('intelligence')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
+                  activePanel === 'intelligence' && !focusMode
+                    ? 'text-indigo-600 bg-white shadow-sm border border-indigo-100' 
+                    : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
+                }`}
+              >
+                <Brain className="w-4 h-4" />
+                Intelligence
+              </button>
+              <button 
+                onClick={() => setPanel('knowledge-graph')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
+                  activePanel === 'knowledge-graph' 
+                    ? 'text-indigo-600 bg-white shadow-sm border border-indigo-100' 
+                    : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
+                }`}
+              >
+                <Network className="w-4 h-4" />
+                Knowledge Graph
+              </button>
+              <button 
+                onClick={() => setPanel('evidence')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
+                  activePanel === 'evidence' 
+                    ? 'text-indigo-600 bg-white shadow-sm border border-indigo-100' 
+                    : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+                Trends
+              </button>
+              <button 
+                onClick={() => setPanel('statistics')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
+                  activePanel === 'statistics' 
+                    ? 'text-indigo-600 bg-white shadow-sm border border-indigo-100' 
+                    : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
+                }`}
+              >
+                <BarChart3 className="w-4 h-4" />
+                Statistics
+              </button>
+              <button 
+                onClick={() => setPanel('library')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-2 ${
+                  activePanel === 'library' 
+                    ? 'text-indigo-600 bg-white shadow-sm border border-indigo-100' 
+                    : 'text-gray-600 hover:text-indigo-600 hover:bg-white/50'
+                }`}
+              >
+                <Library className="w-4 h-4" />
+                Library
+              </button>
+            </nav>
+          )}
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="relative group">
-              <button 
-                title="dowload report"
-                className="p-2 sm:px-4 sm:py-2 text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-lg transition-all"
-              >
-                <Download className="w-5 h-5" />
-              </button>
-              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-[10px] font-medium rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-[60]">
-                dowload report
+            {isAuthenticated && (
+              <div className="relative group">
+                <button 
+                  onClick={() => {
+                    const id = 'report-main-download';
+                    if (isBookmarked(id)) {
+                      removeBookmark(id);
+                    } else {
+                      addBookmark({
+                        id,
+                        type: 'report',
+                        title: 'Intelligence Report: Global Markets Outlook',
+                        data: { generatedAt: new Date().toISOString() }
+                      });
+                    }
+                  }}
+                  title="dowload report"
+                  className="p-2 sm:px-4 sm:py-2 text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-lg transition-all"
+                >
+                  {isBookmarked('report-main-download') ? (
+                    <BookmarkCheck className="w-5 h-5 text-indigo-600" />
+                  ) : (
+                    <Download className="w-5 h-5" />
+                  )}
+                </button>
+                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-[10px] font-medium rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-[60]">
+                  {isBookmarked('report-main-download') ? 'Saved to Library' : 'dowload report'}
+                </div>
               </div>
-            </div>
-            <button className="px-3 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-medium rounded-lg hover:shadow-lg hover:shadow-indigo-500/50 transition-all transform hover:scale-105">
-              <span className="hidden sm:inline">Ingest Data</span>
-              <span className="sm:hidden">+</span>
-            </button>
+            )}
+            {isAuthenticated ? (
+              <button 
+                onClick={() => {
+                  logout();
+                  navigate('/login');
+                }}
+                className="px-3 sm:px-6 py-2 bg-gradient-to-r from-red-600 to-rose-600 text-white text-sm font-medium rounded-lg hover:shadow-lg hover:shadow-rose-500/50 transition-all transform hover:scale-105 flex items-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            ) : (
+              <button 
+                onClick={() => navigate('/login')}
+                className="px-3 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-medium rounded-lg hover:shadow-lg hover:shadow-indigo-500/50 transition-all transform hover:scale-105 flex items-center gap-2"
+              >
+                <LogIn className="w-4 h-4" />
+                <span className="hidden sm:inline">Login</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

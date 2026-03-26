@@ -1,4 +1,5 @@
-import { Activity, Globe, Zap, Shield, ExternalLink } from 'lucide-react';
+import { Activity, Globe, Zap, Shield, ExternalLink, Bookmark, BookmarkCheck } from 'lucide-react';
+import { useLibrary } from '../contexts/LibraryContext';
 
 interface IntelligenceGridProps {
   mode?: 'full' | 'statistics';
@@ -11,6 +12,7 @@ export default function IntelligenceGrid({
   focusMode = false,
   focusTarget = 'dashboard',
 }: IntelligenceGridProps) {
+  const { addBookmark, removeBookmark, isBookmarked } = useLibrary();
   const stats = [
     { label: 'Active Signals', value: '2,847', icon: Activity },
     { label: 'Data Sources', value: '156', icon: Globe },
@@ -52,7 +54,31 @@ export default function IntelligenceGrid({
                       : 'border-gray-200'
                   }`}
               >
-                <stat.icon className="w-5 h-5 text-indigo-600 mb-2" />
+                <div className="flex items-center justify-between mb-2">
+                  <stat.icon className="w-5 h-5 text-indigo-600" />
+                  <button 
+                    onClick={() => {
+                      const id = `stat-${stat.label.toLowerCase().replace(/\s+/g, '-')}`;
+                      if (isBookmarked(id)) {
+                        removeBookmark(id);
+                      } else {
+                        addBookmark({
+                          id,
+                          type: 'trend',
+                          title: `Statistic: ${stat.label} (${stat.value})`,
+                          data: stat
+                        });
+                      }
+                    }}
+                    className="p-1.5 hover:bg-indigo-50 rounded-lg transition-colors text-gray-400 hover:text-indigo-600"
+                  >
+                    {isBookmarked(`stat-${stat.label.toLowerCase().replace(/\s+/g, '-')}`) ? (
+                      <BookmarkCheck className="w-4 h-4 text-indigo-600" />
+                    ) : (
+                      <Bookmark className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
                 <p className="text-2xl sm:text-3xl font-mono font-bold text-gray-900">{stat.value}</p>
                 <p className="text-xs text-gray-600 mt-1">{stat.label}</p>
               </div>

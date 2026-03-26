@@ -1,5 +1,6 @@
 import { Brain, Network, FileText, BarChart3, X } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -9,8 +10,10 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const activePanel = searchParams.get('panel') ?? 'intelligence';
+  const { isAuthenticated } = useAuth();
 
   const setPanel = (panel: string) => {
+    if (!isAuthenticated) return;
     if (panel === 'intelligence') {
       setSearchParams({});
     } else {
@@ -18,6 +21,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     }
     if (onClose) onClose();
   };
+
+  if (!isAuthenticated) return null;
 
   return (
     <aside className={`fixed top-0 left-0 h-full w-64 bg-white backdrop-blur-xl border-r border-gray-200/50 p-6 z-50 transition-all duration-300 lg:hidden ${
