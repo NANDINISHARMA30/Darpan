@@ -32,7 +32,7 @@ export default function Sidebar() {
           <div className="bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl p-5">
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-semibold text-gray-700">System Health</span>
-              <span className="text-xs font-mono font-semibold text-indigo-600">98.7%</span>
+              <span className="text-xs font-mono font-semibold text-indigo-600">98.7</span>
             </div>
             <div className="w-full bg-white rounded-full h-2 overflow-hidden">
               <div className="bg-gradient-to-r from-indigo-500 to-violet-500 h-2 rounded-full transition-all duration-1000" style={{ width: '98.7%' }}></div>

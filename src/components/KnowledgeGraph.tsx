@@ -1,4 +1,4 @@
-import { ZoomIn, ZoomOut, Focus } from 'lucide-react';
+import { ZoomIn, ZoomOut, Focus, Download } from 'lucide-react';
 
 export default function KnowledgeGraph() {
   const nodes = [
@@ -56,6 +56,16 @@ export default function KnowledgeGraph() {
             <button className="p-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-indigo-300 transition-all">
               <Focus className="w-4 h-4 text-gray-600" />
             </button>
+            <div className="relative group">
+              <button 
+                 className="p-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-indigo-300 transition-all"
+               >
+                 <Download className="w-4 h-4 text-gray-600" />
+               </button>
+               <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-[10px] font-medium rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-[60]">
+                 download
+               </div>
+             </div>
           </div>
         </div>
 
@@ -108,27 +118,6 @@ export default function KnowledgeGraph() {
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 via-violet-500/5 to-cyan-500/5 animate-pulse" style={{ zIndex: 0 }}></div>
         </div>
 
-        <div className="p-4 sm:p-6 border-t border-gray-200/50 bg-white/50">
-          <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-3 sm:gap-6 text-xs sm:text-sm">
-            <div className="flex flex-wrap gap-4 sm:gap-6">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full"></div>
-                <span className="text-gray-600">Primary Topics</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-br from-violet-500 to-violet-600 rounded-full"></div>
-                <span className="text-gray-600">Related Domains</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-full"></div>
-                <span className="text-gray-600">Emerging Signals</span>
-              </div>
-            </div>
-            <div className="sm:ml-auto text-[10px] sm:text-xs text-gray-500 font-mono">
-              7 nodes • 6 connections • Updated 1m ago
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

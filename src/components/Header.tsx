@@ -1,4 +1,4 @@
-import { BarChart3, Database } from 'lucide-react';
+import { Download, Database } from 'lucide-react';
 
 export default function Header() {
   return (
@@ -39,9 +39,16 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <button className="p-2 sm:px-4 sm:py-2 text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-lg transition-all">
-              <BarChart3 className="w-5 h-5" />
-            </button>
+            <div className="relative group">
+              <button 
+                className="p-2 sm:px-4 sm:py-2 text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-lg transition-all"
+              >
+                <Download className="w-5 h-5" />
+              </button>
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-[10px] font-medium rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-[60]">
+                dowload report
+              </div>
+            </div>
             <button className="px-3 sm:px-6 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-sm font-medium rounded-lg hover:shadow-lg hover:shadow-indigo-500/50 transition-all transform hover:scale-105">
               <span className="hidden sm:inline">Ingest Data</span>
               <span className="sm:hidden">+</span>

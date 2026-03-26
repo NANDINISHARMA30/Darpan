@@ -11,10 +11,6 @@ export default function SearchSection() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 border border-indigo-100 rounded-full mb-4">
-          <Sparkles className="w-4 h-4 text-indigo-600" />
-          <span className="text-sm font-medium text-indigo-700">AI-Powered Intelligence Analysis</span>
-        </div>
         <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
           What would you like to analyze?
         </h2>
