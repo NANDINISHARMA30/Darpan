@@ -1,6 +1,10 @@
 import { Activity, Globe, Zap, Shield, ExternalLink } from 'lucide-react';
 
-export default function IntelligenceGrid() {
+interface IntelligenceGridProps {
+  mode?: 'full' | 'statistics';
+}
+
+export default function IntelligenceGrid({ mode = 'full' }: IntelligenceGridProps) {
   const stats = [
     { label: 'Active Signals', value: '2,847', icon: Activity },
     { label: 'Data Sources', value: '156', icon: Globe },
@@ -14,8 +18,37 @@ export default function IntelligenceGrid() {
     
   ];
 
+  if (mode === 'statistics') {
+    return (
+      <section id="real-time-statistics" className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl shadow-xl shadow-gray-900/5 p-6 sm:p-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Real-time Statistics</h2>
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {stats.map((stat, index) => (
+              <div
+                key={index}
+                className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl p-4 sm:p-5 hover:shadow-lg hover:scale-[1.02] transition-all"
+              >
+                <stat.icon className="w-5 h-5 text-indigo-600 mb-2" />
+                <p className="text-2xl sm:text-3xl font-mono font-bold text-gray-900">{stat.value}</p>
+                <p className="text-xs text-gray-600 mt-1">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <section id="real-time-statistics" className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl shadow-xl shadow-gray-900/5 p-6 sm:p-8 h-full flex flex-col">
@@ -107,6 +140,6 @@ export default function IntelligenceGrid() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

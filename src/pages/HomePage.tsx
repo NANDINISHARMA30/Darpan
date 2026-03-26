@@ -4,8 +4,12 @@ import SearchSection from '../components/SearchSection';
 import IntelligenceGrid from '../components/IntelligenceGrid';
 import KnowledgeGraph from '../components/KnowledgeGraph';
 import MobileNav from '../components/MobileNav';
+import { useSearchParams } from 'react-router-dom';
 
 export default function HomePage() {
+  const [searchParams] = useSearchParams();
+  const activePanel = searchParams.get('panel') ?? 'intelligence';
+
   return (
     <>
       <Header />
@@ -14,9 +18,15 @@ export default function HomePage() {
         <Sidebar />
 
         <main className="flex-1 lg:ml-64 pb-24 lg:pb-8">
-          <SearchSection />
-          <IntelligenceGrid />
-          <KnowledgeGraph />
+          {activePanel === 'statistics' ? (
+            <IntelligenceGrid mode="statistics" />
+          ) : (
+            <>
+              <SearchSection />
+              <IntelligenceGrid />
+              <KnowledgeGraph />
+            </>
+          )}
         </main>
       </div>
 

@@ -1,6 +1,18 @@
 import { Brain, Network, FileText, BarChart3 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 export default function Sidebar() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activePanel = searchParams.get('panel') ?? 'intelligence';
+
+  const setPanel = (panel: string) => {
+    if (panel === 'intelligence') {
+      setSearchParams({});
+      return;
+    }
+    setSearchParams({ panel });
+  };
+
   return (
     <aside className="hidden lg:block fixed left-0 top-20 h-[calc(100vh-5rem)] w-64 bg-white/50 backdrop-blur-sm border-r border-gray-200/50 p-6">
       <div className="flex flex-col h-full">
@@ -9,7 +21,14 @@ export default function Sidebar() {
             Systems Ready
           </p>
           <nav className="space-y-1">
-            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl shadow-lg shadow-indigo-500/30 transition-all">
+            <button
+              onClick={() => setPanel('intelligence')}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all ${
+                activePanel === 'intelligence'
+                  ? 'text-white bg-gradient-to-r from-indigo-600 to-violet-600 shadow-lg shadow-indigo-500/30'
+                  : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50'
+              }`}
+            >
               <Brain className="w-5 h-5" />
               Intelligence
             </button>
@@ -21,7 +40,14 @@ export default function Sidebar() {
               <FileText className="w-5 h-5" />
               Evidence
             </button>
-            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">
+            <button
+              onClick={() => setPanel('statistics')}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all ${
+                activePanel === 'statistics'
+                  ? 'text-white bg-gradient-to-r from-indigo-600 to-violet-600 shadow-lg shadow-indigo-500/30'
+                  : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50'
+              }`}
+            >
               <BarChart3 className="w-5 h-5" />
               Statistics
             </button>
